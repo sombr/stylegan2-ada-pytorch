@@ -307,8 +307,8 @@ def setup_training_loop_kwargs(
         args.resume_pkl = resume_specs[resume] # predefined url
     elif resume == "latest":
         desc += '-latest'
-        res_dir = next(list(reversed(sorted(os.listdir(outdir)))))
-        last_pkl = next(list(reversed(sorted(filter(lambda x: x.startswith("network-snap"), os.listdir(res_dir))))))
+        res_dir = next(list(reversed(sorted(os.listdir(outdir)))).__iter__())
+        last_pkl = next(list(reversed(sorted(filter(lambda x: x.startswith("network-snap"), os.listdir(res_dir))))).__iter__())
         args.resume_pkl = res_dir + "/" + last_pkl
     else:
         desc += '-resumecustom'
