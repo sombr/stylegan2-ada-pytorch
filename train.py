@@ -35,6 +35,7 @@ def setup_training_loop_kwargs(
     snap       = None, # Snapshot interval: <int>, default = 50 ticks
     metrics    = None, # List of metric names: [], ['fid50k_full'] (default), ...
     seed       = None, # Random seed: <int>, default = 0
+    result_dir = None, # result dir
 
     # Dataset.
     data       = None, # Training dataset (required): <path>
@@ -244,8 +245,6 @@ def setup_training_loop_kwargs(
 
     if p is not None:
         assert isinstance(p, float)
-        if aug != 'fixed':
-            raise UserError('--p can only be specified with --aug=fixed')
         if not 0 <= p <= 1:
             raise UserError('--p must be between 0 and 1')
         desc += f'-p{p:g}'
@@ -306,6 +305,11 @@ def setup_training_loop_kwargs(
     elif resume in resume_specs:
         desc += f'-resume{resume}'
         args.resume_pkl = resume_specs[resume] # predefined url
+    elif resume == "latest":
+        desc += '-latest'
+        res_dir = next(list(reversed(sorted(os.listdir(result_dir)))))
+        last_pkl = next(list(reversed(sorted(filter(lambda x: x.startswith("network-snap"), os.listdir(res_dir))))))
+        args.resume_pkl = res_dir + "/" + last_pkl
     else:
         desc += '-resumecustom'
         args.resume_pkl = resume # custom path or url
