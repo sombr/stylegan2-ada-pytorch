@@ -35,7 +35,7 @@ def setup_training_loop_kwargs(
     snap       = None, # Snapshot interval: <int>, default = 50 ticks
     metrics    = None, # List of metric names: [], ['fid50k_full'] (default), ...
     seed       = None, # Random seed: <int>, default = 0
-    result_dir = None, # result dir
+    outdir     = None, # result dir
 
     # Dataset.
     data       = None, # Training dataset (required): <path>
@@ -307,7 +307,7 @@ def setup_training_loop_kwargs(
         args.resume_pkl = resume_specs[resume] # predefined url
     elif resume == "latest":
         desc += '-latest'
-        res_dir = next(list(reversed(sorted(os.listdir(result_dir)))))
+        res_dir = next(list(reversed(sorted(os.listdir(outdir)))))
         last_pkl = next(list(reversed(sorted(filter(lambda x: x.startswith("network-snap"), os.listdir(res_dir))))))
         args.resume_pkl = res_dir + "/" + last_pkl
     else:
